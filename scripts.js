@@ -1,12 +1,12 @@
 $( document ).ready( function() {
 
-    var app = function() {
+    var snake = function() {
 
         /**
          * canvas
          *
          * Selects canvas element via ID canvas.
-         * Canvas holds our drawing pane.
+         * Canvas holds our drawing plane.
          *
          * @type DOM object
          */
@@ -28,7 +28,7 @@ $( document ).ready( function() {
         /**
          * coordinates
          *
-         * Array holds x + y coordinates for rectangle
+         * Array holds x + y coordinates for snake's head
          */
         var coords = new Array();
         coords[0] = 0;
@@ -47,16 +47,9 @@ $( document ).ready( function() {
          *
          * Array holds a list of keycodes
          *
-         * WASD, up left down right
+         * [ w, up arr ], [ a, left arr ], [ s, down arr ], [ d, right arr ]
          */
         var keys = [ [ 87, 38 ], [ 37, 65 ], [ 40, 83 ], [ 39, 68 ] ];
-
-        /**
-         * velocity
-         *
-         * Int that is used to modify x and y coordinates.
-         */
-        var velocity = 1;
 
         /**
          * direction
@@ -77,32 +70,6 @@ $( document ).ready( function() {
          * Int refers to length of snake. Is incremented by single integers
          */
         var length = 1;
-
-        /**
-         * Calculate Velocity
-         *
-         * Calculates velocity based on current velocity and whether keys are
-         * currently pressed.
-         *
-         * @return int
-         */
-        function calcVelocity( e ) {
-            if( e.type != 'keyup' ) {
-                for( i = 0; i < 4; i ++ ) {
-                    if( e.which == keys[0][i] || e.which == keys[1][i] ) { // If key is pressed
-                        if( velocity < maxVelocity ) {
-                            velocity ++;
-                        }
-                    }
-                }
-            } else {
-                if( velocity > minVelocity ) {
-                    velocity --;
-                }
-            }
-
-            return velocity;
-        }
 
         /**
          * Change Direction
@@ -132,7 +99,12 @@ $( document ).ready( function() {
         /**
          * Move Snake
          *
-         * Moves snake based on direction
+         * Moves snake's head based on direction. Also moves snake's head to the
+         * other side of the canvas if new coordinates cause it to go off
+         * screen.
+         *
+         * @access private
+         * @param array[x, y]
          */
         function moveHead( origin ) {
             var moveDistance = 10;
@@ -162,13 +134,13 @@ $( document ).ready( function() {
         }
 
         /**
-         * Paint Rectangle
+         * Paint Snake
          *
-         * Draws a rectangle onto the canvas when given x and y coords in an
+         * Draws rectangle(s) onto the canvas when given x and y coords in an
          * array.
          *
-         * @param array[x] : int
-         * @param array[y] : int
+         * @access private
+         * @param array[x, y]
          */
         function paintSnake( origin ) {
             draw.fillRect( origin[0], origin[1], 20, 20 );
@@ -187,8 +159,7 @@ $( document ).ready( function() {
         /**
          * tick
          *
-         * Everything that needs to go onto the canvas should be called in this
-         * function. This is may possibly be changed in future.
+         * This acts as the game loop. If it's in the game, it's called here.
          */
         function tick() {
             tock = true;
@@ -206,6 +177,12 @@ $( document ).ready( function() {
 
         return {
 
+            /**
+             * Init
+             *
+             * Accessed via snake.init(), this function is a handle for the
+             * snake namespace
+             */
             init : function() {
                 tick(); // Set clock ticking
             }
@@ -214,6 +191,6 @@ $( document ).ready( function() {
 
     }();
 
-    app.init();
+    snake.init();
 
 });
