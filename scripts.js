@@ -72,11 +72,37 @@ $( document ).ready( function() {
         var length = 1;
 
         /**
+         * segments
+         *
+         * Array used to keep track of the number of body segments the snake
+         * has.
+         */
+        var segments = new Array();
+        segments.push( '1' ); // Initial body
+        segments.push( '2' ); // Initial body
+
+        /**
          * tick speed
          *
          * Int controls how fast the game "ticks". Default is 100.
          */
         var tickSpeed = 100;
+
+        /**
+         * fruit exists
+         *
+         * If fruit exists: bool should be true.
+         */
+        var fruitExists = false;
+
+        /**
+         * fruit coordinates
+         *
+         * Array contains the fruit's coordinates.
+         *
+         * @values array[ x, y ];
+         */
+        var fruitCoords = new Array();
 
         /**
          * Change Direction
@@ -150,7 +176,86 @@ $( document ).ready( function() {
          * @param array[x, y]
          */
         function paintSnake( origin ) {
+            // head
+            draw.fillStyle = "orange";
             draw.fillRect( origin[0], origin[1], 20, 20 );
+
+            draw.fillStyle = "blue";
+            for( i = 1; i <= segments.length; i++ ) {
+
+                if( direction == 'up' ) {
+                    draw.fillRect( origin[0], origin[1] + i * 20, 20, 20 );
+                } else if( direction == 'left' ) {
+                    draw.fillRect( origin[0] + i * 20, origin[1], 20, 20 );
+                } else if( direction == 'right' ) {
+                    draw.fillRect( origin[0] - i * 20, origin[1], 20, 20 );
+                } else if( direction == 'down' ) {
+                    draw.fillRect( origin[0], origin[1] - i * 20, 20, 20 );
+                }
+            }
+        }
+
+        /**
+         * Hit Check
+         *
+         * Checks whether snake's head and fruit are hitting each other
+         */
+        function hitCheck( coords, fruitCoords ) {
+            var oneHit = coords[0] < fruitCoords[0] ? coords : fruitCoords;
+            var twoHit = coords[0] < fruitCoords[0] ? fruitCoords : coords;
+
+            return oneHit[1] > twoHit[0] || oneHit[0] === twoHit[0] ? true : false;
+        }
+
+        /**
+         * Fruit Handler
+         *
+         * Function checks whether snake has eaten fruit and calls generation of
+         * fruit when it there is no fruit on page.
+         */
+        function fruitHandler() {
+            if( ! fruitExists ) {
+                generateFruit();
+            } else {
+                draw.fillStyle = "green"; // It's an apple!
+                draw.fillRect( fruitCoords[0], fruitCoords[1], 20, 20 );
+            }
+
+            var snakeHead = [ [ coords[0], coords[0] + 20 ], [ coords[1], coords[1] + 20 ] ];
+            var fruit = [ [ fruitCoords[0], fruitCoords[0] + 20 ], [ fruitCoords[1], fruitCoords[1] + 20 ] ];
+
+            var hitX = hitCheck( snakeHead[0], fruit[0] );
+            var hitY = hitCheck( snakeHead[1], fruit[1] );
+
+            var hit = hitX && hitY;
+
+            if( hit ) {
+                draw.clearRect( fruitCoords[0], fruitCoords[1], 20, 20 );
+                fruitExists = false;
+                segments.push( toString( segments.length + 1 ) );
+                if( tickSpeed > 40 ) {
+                    tickSpeed -= 10;
+                }
+            }
+        }
+
+        /**
+         * Generate Fruit
+         *
+         * Generates fruit at a random location in the canvas.
+         */
+        function generateFruit() {
+            var x = Math.floor( Math.random() * ( canvas.width + 1 ) );
+            var y = Math.floor( Math.random() * ( canvas.height + 1 ) );
+
+            // Record new coordinates
+            fruitCoords[0] = x;
+            fruitCoords[1] = y;
+
+            draw.fillStyle = "green"; // It's an apple!
+            draw.fillRect( x, y, 20, 20 );
+
+            fruitExists = true;
         }
 
         /**
@@ -178,6 +283,7 @@ $( document ).ready( function() {
 
             moveHead( coords );
             paintSnake( coords );
+            fruitHandler();
 
             setTimeout( function() { tick() }, speed() );
         }
