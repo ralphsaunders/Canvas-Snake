@@ -72,6 +72,13 @@ $( document ).ready( function() {
         var length = 1;
 
         /**
+         * tick speed
+         *
+         * Int controls how fast the game "ticks". Default is 100.
+         */
+        var tickSpeed = 100;
+
+        /**
          * Change Direction
          *
          * Modifies direction based on key press. Only listens to one keypress
@@ -153,7 +160,7 @@ $( document ).ready( function() {
          * speed value, the slower the 'ticks'.
          */
         function speed() {
-            return 100;
+            return tickSpeed;
         }
 
         /**
