@@ -266,7 +266,7 @@ $( document ).ready( function() {
         /**
          * Generate Random Coords
          *
-         * Generates random x + y coordinates.
+         * Generates random x + y coordinates in multiples of 20.
          */
         function generateRandomCoords() {
             var x = Math.round( Math.floor( Math.random() * ( canvas.width - 19 ) ) / 20 ) * 20;

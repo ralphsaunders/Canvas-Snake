@@ -3,7 +3,7 @@
 <head>
     <title>Canvas Hacking</title>
     <script type="text/javascript" src="./jquery-1.6.4.min.js"></script>
-    <script type="text/javascript" src="./scripts.js"></script>
+    <script type="text/javascript" src="./scripts.js?<?php echo time(); ?>"></script>
     <style type="text/css">
         #canvas {
             border: 1px solid gray;
