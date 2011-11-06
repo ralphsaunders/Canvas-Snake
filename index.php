@@ -8,6 +8,6 @@
 <body id="index">
     <canvas id="canvas" width="1000" height="500" style="border: 1px solid gray"></canvas>
 
-    <h1> Use arrow keys to move</h1>
+    <h1>Use your WASD or arrow keys to move</h1>
 </body>
 </html>
