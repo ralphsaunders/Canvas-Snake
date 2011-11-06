@@ -35,6 +35,21 @@ $( document ).ready( function() {
         coords[1] = 0;
 
         /**
+         * Past coordinates
+         *
+         * Array holds past coordinates for snake's head. The segments use this
+         * for positioning.
+         */
+        var pastCoords = new Array();
+
+        /**
+         * Move distance
+         *
+         * The amount of pixels the snake should move.
+         */
+        var moveDistance = 20;
+
+        /**
          * tock
          *
          * Bool that helps keep track of whether coords have been modified but
@@ -65,13 +80,6 @@ $( document ).ready( function() {
         var direction = 'right';
 
         /**
-         * length
-         *
-         * Int refers to length of snake. Is incremented by single integers
-         */
-        var length = 1;
-
-        /**
          * segments
          *
          * Array used to keep track of the number of body segments the snake
@@ -79,7 +87,6 @@ $( document ).ready( function() {
          */
         var segments = new Array();
         segments.push( '1' ); // Initial body
-        segments.push( '2' ); // Initial body
 
         /**
          * tick speed
@@ -130,6 +137,20 @@ $( document ).ready( function() {
         }
 
         /**
+         * Update Past Coordinates
+         *
+         * Manages pastCoords array
+         */
+        function updatePastCoords() {
+            pastCoords.push( [ coords[0], coords[1] ] );
+            console.log( coords, pastCoords );
+
+            if( pastCoords.length > segments.length ) {
+                pastCoords.splice( 0, 1 ); // remove 1 element from index 0
+            }
+        }
+
+        /**
          * Move Snake
          *
          * Moves snake's head based on direction. Also moves snake's head to the
@@ -140,7 +161,8 @@ $( document ).ready( function() {
          * @param array[x, y]
          */
         function moveHead( origin ) {
-            var moveDistance = 10;
+
+            updatePastCoords();
 
             if( direction == 'up' ) {
                 origin[1] -= moveDistance;
@@ -180,18 +202,10 @@ $( document ).ready( function() {
             draw.fillStyle = "orange";
             draw.fillRect( origin[0], origin[1], 20, 20 );
 
-            draw.fillStyle = "blue";
-            for( i = 1; i <= segments.length; i++ ) {
-
-                if( direction == 'up' ) {
-                    draw.fillRect( origin[0], origin[1] + i * 20, 20, 20 );
-                } else if( direction == 'left' ) {
-                    draw.fillRect( origin[0] + i * 20, origin[1], 20, 20 );
-                } else if( direction == 'right' ) {
-                    draw.fillRect( origin[0] - i * 20, origin[1], 20, 20 );
-                } else if( direction == 'down' ) {
-                    draw.fillRect( origin[0], origin[1] - i * 20, 20, 20 );
-                }
+            // body segments
+            for( i = 0; i < segments.length; i++ ) {
+                draw.fillStyle = "blue";
+                draw.fillRect( pastCoords[i][0], pastCoords[i][1], 20, 20 );
             }
         }
 
@@ -245,8 +259,8 @@ $( document ).ready( function() {
          * Generates fruit at a random location in the canvas.
          */
         function generateFruit() {
-            var x = Math.floor( Math.random() * ( canvas.width + 1 ) );
-            var y = Math.floor( Math.random() * ( canvas.height + 1 ) );
+            var x = Math.floor( Math.random() * ( canvas.width - 19 ) );
+            var y = Math.floor( Math.random() * ( canvas.height + - 19 ) );
 
             // Record new coordinates
             fruitCoords[0] = x;
@@ -259,6 +273,27 @@ $( document ).ready( function() {
         }
 
         /**
+         * Tail Bite Handler
+         *
+         * Checks to see whether snake has bitten itself.
+         */
+        function tailBiteCheck() {
+            var snakeHead = [ [ coords[0], coords[0] + 20 ], [ coords[1], coords[1] + 20 ] ];
+            for( i = 0; i < segments.length - 1; i++ ) {
+                var tailSegment = [ [ pastCoords[i][0], pastCoords[i][0] + 20 ], [ pastCoords[i][1], pastCoords[i][1] + 20 ] ];
+
+                var hitX = hitCheck( snakeHead[0], tailSegment[0] );
+                var hitY = hitCheck( snakeHead[1], tailSegment[1] );
+                var hit = hitX && hitY;
+
+                if( hit ) {
+                    alert( "Game Over" );
+                    reset();
+                }
+            }
+        }
+
+        /**
          * Speed
          *
          * The speed at which the tick() function is called. The higher the
@@ -266,6 +301,17 @@ $( document ).ready( function() {
          */
         function speed() {
             return tickSpeed;
+        }
+
+        /**
+         * Reset
+         *
+         * Resets game
+         */
+        function reset() {
+            segments.splice( 1, segments.length - 1 );
+            pastCoords.splice( 1, pastCoords.length - 1 );
+            tickSpeed = 100;
         }
 
         /**
@@ -284,6 +330,7 @@ $( document ).ready( function() {
             moveHead( coords );
             paintSnake( coords );
             fruitHandler();
+            tailBiteCheck();
 
             setTimeout( function() { tick() }, speed() );
         }
