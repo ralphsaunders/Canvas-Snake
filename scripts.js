@@ -31,8 +31,7 @@ $( document ).ready( function() {
          * Array holds x + y coordinates for snake's head
          */
         var coords = new Array();
-        coords[0] = 0;
-        coords[1] = 0;
+        coords = generateRandomCoords();
 
         /**
          * Past coordinates
@@ -143,7 +142,6 @@ $( document ).ready( function() {
          */
         function updatePastCoords() {
             pastCoords.push( [ coords[0], coords[1] ] );
-            console.log( coords, pastCoords );
 
             if( pastCoords.length > segments.length ) {
                 pastCoords.splice( 0, 1 ); // remove 1 element from index 0
@@ -216,7 +214,9 @@ $( document ).ready( function() {
         /**
          * Hit Check
          *
-         * Checks whether snake's head and fruit are hitting each other
+         * Borrowed from previous project, can't remember how it exactly works,
+         * but it checks whether param 1 and 2 are hitting each other
+         *
          */
         function hitCheck( coords, fruitCoords ) {
             var oneHit = coords[0] < fruitCoords[0] ? coords : fruitCoords;
@@ -234,14 +234,11 @@ $( document ).ready( function() {
         function fruitHandler() {
             if( ! fruitExists ) {
                 fruitCoords = generateRandomCoords();
-                draw.fillStyle = "green"; // It's an apple!
-                draw.fillRect( fruitCoords[0], fruitCoords[1], 20, 20 );
-
                 fruitExists = true;
-            } else {
-                draw.fillStyle = "green"; // It's an apple!
-                draw.fillRect( fruitCoords[0], fruitCoords[1], 20, 20 );
             }
+
+            draw.fillStyle = "green"; // It's an apple!
+            draw.fillRect( fruitCoords[0], fruitCoords[1], 20, 20 );
 
             var snakeHead = [ [ coords[0], coords[0] + 20 ], [ coords[1], coords[1] + 20 ] ];
             var fruit = [ [ fruitCoords[0], fruitCoords[0] + 20 ], [ fruitCoords[1], fruitCoords[1] + 20 ] ];
@@ -253,6 +250,11 @@ $( document ).ready( function() {
 
             if( hit ) {
                 draw.clearRect( fruitCoords[0], fruitCoords[1], 20, 20 );
+
+                // Show hit
+                draw.fillStyle = "rgb( 20, 151, 245)";
+                draw.fillRect( fruitCoords[0], fruitCoords[1], 20, 20 );
+
                 fruitExists = false;
                 segments.push( toString( segments.length + 1 ) );
                 if( tickSpeed > 40 ) {
@@ -267,8 +269,8 @@ $( document ).ready( function() {
          * Generates random x + y coordinates.
          */
         function generateRandomCoords() {
-            var x = Math.floor( Math.random() * ( canvas.width - 19 ) );
-            var y = Math.floor( Math.random() * ( canvas.height + - 19 ) );
+            var x = Math.round( Math.floor( Math.random() * ( canvas.width - 19 ) ) / 20 ) * 20;
+            var y = Math.round( Math.floor( Math.random() * ( canvas.height - 19 ) ) / 20 ) * 20;
 
             return [ x, y ]
         }
@@ -345,7 +347,7 @@ $( document ).ready( function() {
              * Init
              *
              * Accessed via snake.init(), this function is a handle for the
-             * snake namespace
+             * snake namespace.
              */
             init : function() {
                 tick(); // Set clock ticking
