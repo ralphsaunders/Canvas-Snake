@@ -177,13 +177,13 @@ $( document ).ready( function() {
             // Reset snakes head if it has gone out of bounds
             if( origin[0] < 0 ) {
                 origin[0] = canvas.width - moveDistance;
-            } else if( origin[0] > canvas.width ) {
+            } else if( origin[0] + moveDistance > canvas.width ) {
                 origin[0] = 0; // No need to add moveDistance because head is drawn from topLeft
             }
 
             if( origin[1] < 0 ) {
                 origin[1] = canvas.height - moveDistance;
-            } else if( origin[1] > canvas.height ) {
+            } else if( origin[1] + moveDistance > canvas.height ) {
                 origin[1] = 0; // No need to add moveDistance because head is drawn from topLeft
             }
         }
@@ -199,12 +199,16 @@ $( document ).ready( function() {
          */
         function paintSnake( origin ) {
             // head
-            draw.fillStyle = "orange";
+            draw.fillStyle = "rgb( 20, 151, 245)";
             draw.fillRect( origin[0], origin[1], 20, 20 );
 
             // body segments
             for( i = 0; i < segments.length; i++ ) {
-                draw.fillStyle = "blue";
+                if( i < 5 ) {
+                    draw.fillStyle = "rgba( 20, 151, 245, 0." + ( i + 3 ) + " )";
+                } else {
+                    draw.fillStyle = "rgba( 20, 151, 245, 0.7 )";
+                }
                 draw.fillRect( pastCoords[i][0], pastCoords[i][1], 20, 20 );
             }
         }
@@ -229,7 +233,11 @@ $( document ).ready( function() {
          */
         function fruitHandler() {
             if( ! fruitExists ) {
-                generateFruit();
+                fruitCoords = generateRandomCoords();
+                draw.fillStyle = "green"; // It's an apple!
+                draw.fillRect( fruitCoords[0], fruitCoords[1], 20, 20 );
+
+                fruitExists = true;
             } else {
                 draw.fillStyle = "green"; // It's an apple!
                 draw.fillRect( fruitCoords[0], fruitCoords[1], 20, 20 );
@@ -254,22 +262,15 @@ $( document ).ready( function() {
         }
 
         /**
-         * Generate Fruit
+         * Generate Random Coords
          *
-         * Generates fruit at a random location in the canvas.
+         * Generates random x + y coordinates.
          */
-        function generateFruit() {
+        function generateRandomCoords() {
             var x = Math.floor( Math.random() * ( canvas.width - 19 ) );
             var y = Math.floor( Math.random() * ( canvas.height + - 19 ) );
 
-            // Record new coordinates
-            fruitCoords[0] = x;
-            fruitCoords[1] = y;
-
-            draw.fillStyle = "green"; // It's an apple!
-            draw.fillRect( x, y, 20, 20 );
-
-            fruitExists = true;
+            return [ x, y ]
         }
 
         /**
@@ -287,7 +288,6 @@ $( document ).ready( function() {
                 var hit = hitX && hitY;
 
                 if( hit ) {
-                    alert( "Game Over" );
                     reset();
                 }
             }
@@ -309,9 +309,13 @@ $( document ).ready( function() {
          * Resets game
          */
         function reset() {
+            alert( "Game Over" );
             segments.splice( 1, segments.length - 1 );
             pastCoords.splice( 1, pastCoords.length - 1 );
             tickSpeed = 100;
+
+            var newCoords = generateRandomCoords();
+            coords = newCoords;
         }
 
         /**

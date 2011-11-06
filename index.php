@@ -6,7 +6,7 @@
     <script type="text/javascript" src="./scripts.js"></script>
 </head>
 <body id="index">
-    <canvas id="canvas" width="1000" height="500" style="background:red;"></canvas>
+    <canvas id="canvas" width="1000" height="500" style="border: 1px solid gray"></canvas>
 
     <h1> Use arrow keys to move</h1>
 </body>
