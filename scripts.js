@@ -49,6 +49,15 @@ $( document ).ready( function() {
         var moveDistance = 20;
 
         /**
+         * Score
+         *
+         * A fixed score for each fruit eaten.
+         *
+         * @author Abdelrahman Mahmoud <abdel@aplusm.me>
+         */
+        var score = 1;
+
+        /**
          * tock
          *
          * Bool that helps keep track of whether coords have been modified but
@@ -252,6 +261,9 @@ $( document ).ready( function() {
             if( hit ) {
                 draw.clearRect( fruitCoords[0], fruitCoords[1], 20, 20 );
 
+                // Update score
+                updateScore();
+
                 // Show hit
                 draw.fillStyle = "rgb( 20, 151, 245)";
                 draw.fillRect( fruitCoords[0], fruitCoords[1], 20, 20 );
@@ -313,6 +325,7 @@ $( document ).ready( function() {
          */
         function reset() {
             alert( "Game Over" );
+            resetScore();
             segments.splice( 1, segments.length - 1 );
             pastCoords.splice( 1, pastCoords.length - 1 );
             tickSpeed = 100;
@@ -340,6 +353,30 @@ $( document ).ready( function() {
             tailBiteCheck();
 
             setTimeout( function() { tick() }, speed() );
+        }
+
+        /**
+         * updateScore
+         *
+         * This updates your current score each time you eat something.
+         *
+         * @author Abdelrahman Mahmoud <abdel@aplusm.me>
+         */
+        function updateScore() {
+            var count = parseInt($('#count').html());
+            count += score;
+            $('#count').html(count);
+        }
+
+        /**
+         * resetScore
+         *
+         * This resets the score after the game is over.
+         *
+         * @author Abdelrahman Mahmoud <abdel@aplusm.me>
+         */
+        function resetScore() {
+            $('#count').html(0);
         }
 
         return {
