@@ -215,8 +215,9 @@ $( document ).ready( function() {
          * Hit Check
          *
          * Borrowed from previous project, can't remember how it exactly works,
-         * but it checks whether param 1 and 2 are hitting each other
+         * but it checks whether param 1 and 2 are hitting each other.
          *
+         * @return bool
          */
         function hitCheck( coords, fruitCoords ) {
             var oneHit = coords[0] < fruitCoords[0] ? coords : fruitCoords;
