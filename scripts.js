@@ -120,6 +120,13 @@ $( document ).ready( function() {
         var fruitCoords = new Array();
 
         /**
+         * high score
+         *
+         * Int keeps track of player's highest score
+         */
+        var highScore = '0';
+
+        /**
          * Change Direction
          *
          * Modifies direction based on key press. Only listens to one keypress
@@ -325,7 +332,7 @@ $( document ).ready( function() {
          */
         function reset() {
             alert( "Game Over" );
-            resetScore();
+            resetScore(); // Reset score to 0
             segments.splice( 1, segments.length - 1 );
             pastCoords.splice( 1, pastCoords.length - 1 );
             tickSpeed = 100;
@@ -358,7 +365,7 @@ $( document ).ready( function() {
         /**
          * updateScore
          *
-         * This updates your current score each time you eat something.
+         * This updates your current score each time the snake eat's something.
          *
          * @author Abdelrahman Mahmoud <abdel@aplusm.me>
          */
@@ -366,6 +373,12 @@ $( document ).ready( function() {
             var count = parseInt($('#count').html());
             count += score;
             $('#count').html(count);
+
+            // High score, @author Ralph Saunders <e@ralphsaunders.co.uk>
+            if( count > highScore ) {
+                highScore = count;
+                $( '#high-score' ).html( highScore );
+            }
         }
 
         /**
