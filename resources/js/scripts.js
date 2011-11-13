@@ -332,7 +332,14 @@ $( document ).ready( function() {
          * Resets game
          */
         function reset() {
-            alert( "Game Over" );
+
+            var count = parseInt($('#count').html());
+
+            if( count >= highScore ) {
+                var name = prompt( "What's your name?", "" );
+                console.log( name );
+            }
+
             resetScore(); // Reset score to 0
             segments.splice( 1, segments.length - 1 );
             pastCoords.splice( 1, pastCoords.length - 1 );

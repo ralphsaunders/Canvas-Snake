@@ -10,8 +10,14 @@ class Site extends CI_Controller {
      */
     public function index()
     {
+        $this->load->model( 'scores_model' );
+
+        if( $query = $this->scores_model->fetch_scores() )
+        {
+            $data['scores'] = $query;
+        }
+
         $data['main_content'] = 'snake';
-        $data['scores'] = 'derp';
         $this->load->view( 'includes/template', $data );
     }
 }

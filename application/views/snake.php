@@ -10,3 +10,12 @@
 
 <h1>Use your WASD or arrow keys to move</h1>
 
+<?php if( isset( $scores ) ) : ?>
+<ul>
+<?php foreach( $scores as $score ) : ?>
+<li><?php echo $score->name; ?> scored <?php echo $score->score; ?> points</li>
+<?php endforeach; ?>
+</ul>
+<?php else : ?>
+<h3>No one has entered in their scores yet</h3>
+<?php endif; ?>
