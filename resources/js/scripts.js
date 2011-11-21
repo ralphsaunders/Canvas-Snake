@@ -127,6 +127,27 @@ $( document ).ready( function() {
         var highScore = '0';
 
         /**
+         * Add High Score
+         *
+         * Asynchronous function that sends user's score to the server and
+         * passes server response with a callback.
+         *
+         * @param  array[ string, int ]
+         * @access private
+         */
+        function addHighScore( data, callback ) {
+            $.ajax({
+                url: siteUrl + 'site/add_score',
+                dataType: "json",
+                type: 'POST',
+                data: { data: data },
+                success: function( response ) {
+                    callback( response );
+                }
+            });
+        }
+
+        /**
          * Change Direction
          *
          * Modifies direction based on key press. Only listens to one keypress
@@ -337,7 +358,41 @@ $( document ).ready( function() {
 
             if( count >= highScore ) {
                 var name = prompt( "What's your name?", "" );
-                console.log( name );
+
+                addHighScore( [ name, count ], function( response ) {
+                    console.log( response );
+
+                    if( response ) {
+
+                        if( ! $( '#score-board' ).length ) {
+                            var newScoreBoard = new Array();
+                            newScoreBoard.push( '<ul id="score-board"></ul>' );
+
+                            $( 'body' ).append( newScoreBoard.join( '' ) );
+                        }
+
+                        if( $( '.score' ).attr( 'name' ) == response.name ) {
+                            console.log( $( this ) );
+
+                            $( '.score' ).each( function() {
+                                if( $( this ).attr( 'name' ) == response.name ) {
+                                    $( this ).html( response.score );
+                                    return false; // breaks
+                                }
+                            });
+                        } else {
+                            var newScore = new Array();
+
+                            newScore.push( '<li><span class="name">' );
+                            newScore.push( response.name + '</span>' );
+                            newScore.push( ' scored <span class="score" name="' + response.name + '">' );
+                            newScore.push( response.score + '</span>' );
+                            newScore.push( ' points</li>' );
+
+                            $( '#score-board' ).append( newScore.join( '' ) );
+                        }
+                    }
+                });
             }
 
             resetScore(); // Reset score to 0

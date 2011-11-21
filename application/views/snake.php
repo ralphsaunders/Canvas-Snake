@@ -1,4 +1,4 @@
-<canvas id="canvas" width="1000" height="500"></canvas>
+<canvas id="canvas" width="400" height="300"></canvas>
 
 <div id="score">
     <div style="display: inline;">Score:</div>
@@ -11,9 +11,9 @@
 <h1>Use your WASD or arrow keys to move</h1>
 
 <?php if( isset( $scores ) ) : ?>
-<ul>
+<ul id="score-board">
 <?php foreach( $scores as $score ) : ?>
-<li><?php echo $score->name; ?> scored <?php echo $score->score; ?> points</li>
+<li><span class="name"><?php echo $score->name; ?></span> scored <span class="score" name="<?php echo $score->name; ?>"><?php echo $score->score; ?></span> points</li>
 <?php endforeach; ?>
 </ul>
 <?php else : ?>
