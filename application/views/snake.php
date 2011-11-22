@@ -1,4 +1,4 @@
-<canvas id="canvas" width="400" height="300"></canvas>
+<canvas id="canvas" width="800" height="600"></canvas>
 
 <div id="score">
     <div style="display: inline;">Score:</div>

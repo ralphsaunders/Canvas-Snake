@@ -157,6 +157,17 @@ $( document ).ready( function() {
          */
         function changeDirection( e ) {
 
+            /**
+             * Loop through all recorded keycodes in the keys array. If the key
+             * pressed matches one of the keycodes then we'll prevent its
+             * default function.
+             */
+            for( i = 0; i < keys.length; i++ ) {
+                if( e.which == keys[i][0] || e.which == keys[i][1] ) {
+                    e.preventDefault();
+                }
+            }
+
             if( tock ) {
 
                 if( e.which == keys[0][0] || e.which == keys[0][1] ) { // Up
