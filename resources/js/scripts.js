@@ -124,7 +124,14 @@ $( document ).ready( function() {
          *
          * Int keeps track of player's highest score
          */
-        var highScore = '0';
+        var highScore = 0;
+
+        /**
+         * Player's Score
+         *
+         * Int keeps track of player's current score
+         */
+        var playersScore = 0;
 
         /**
          * Add High Score
@@ -325,7 +332,7 @@ $( document ).ready( function() {
             var x = Math.round( Math.floor( Math.random() * ( canvas.width - 19 ) ) / 20 ) * 20;
             var y = Math.round( Math.floor( Math.random() * ( canvas.height - 19 ) ) / 20 ) * 20;
 
-            return [ x, y ]
+            return [ x, y ];
         }
 
         /**
@@ -365,13 +372,10 @@ $( document ).ready( function() {
          */
         function reset() {
 
-            var count = parseInt($('#count').html());
-
-            if( count >= highScore ) {
+            if( playersScore == highScore ) {
                 var name = prompt( "What's your name?", "" );
 
-                addHighScore( [ name, count ], function( response ) {
-                    console.log( response );
+                addHighScore( [ name, highScore ], function( response ) {
 
                     if( response ) {
 
@@ -382,26 +386,28 @@ $( document ).ready( function() {
                             $( 'body' ).append( newScoreBoard.join( '' ) );
                         }
 
-                        if( $( '.score' ).attr( 'name' ) == response.name ) {
-                            console.log( $( this ) );
+                        var scoresLength = $( '.score' ).size();
 
-                            $( '.score' ).each( function() {
+                            $( '.score' ).each( function( index ) {
+
                                 if( $( this ).attr( 'name' ) == response.name ) {
                                     $( this ).html( response.score );
                                     return false; // breaks
                                 }
+
+                                if( index == scoresLength - 1 && $( this ).attr( 'name' ) != response.name ) {
+                                    var newScore = new Array();
+
+                                    newScore.push( '<li><span class="name">' );
+                                    newScore.push( response.name + '</span>' );
+                                    newScore.push( ' scored <span class="score" name="' + response.name + '">' );
+                                    newScore.push( response.score + '</span>' );
+                                    newScore.push( ' points</li>' );
+
+                                    $( '#score-board' ).prepend( newScore.join( '' ) );
+                                }
+
                             });
-                        } else {
-                            var newScore = new Array();
-
-                            newScore.push( '<li><span class="name">' );
-                            newScore.push( response.name + '</span>' );
-                            newScore.push( ' scored <span class="score" name="' + response.name + '">' );
-                            newScore.push( response.score + '</span>' );
-                            newScore.push( ' points</li>' );
-
-                            $( '#score-board' ).append( newScore.join( '' ) );
-                        }
                     }
                 });
             }
@@ -444,13 +450,12 @@ $( document ).ready( function() {
          * @author Abdelrahman Mahmoud <abdel@aplusm.me>
          */
         function updateScore() {
-            var count = parseInt($('#count').html());
-            count += score;
-            $('#count').html(count);
+            playersScore += score;
+            $('#count').html(playersScore);
 
             // High score, @author Ralph Saunders <e@ralphsaunders.co.uk>
-            if( count > highScore ) {
-                highScore = count;
+            if( playersScore > highScore ) {
+                highScore = playersScore;
                 $( '#high-score' ).html( highScore );
             }
         }
@@ -464,6 +469,7 @@ $( document ).ready( function() {
          */
         function resetScore() {
             $('#count').html(0);
+            playersScore = 0;
         }
 
         return {

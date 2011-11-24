@@ -10,6 +10,9 @@
         var siteUrl = "<?php echo site_url(); ?>/";
     </script>
 
+    <!-- CSS -->
+    <link rel="stylesheet" href="<?php echo base_url(); ?>resources/css/styles.css" type="text/css" media="screen">
+
     <!-- Shabby and temporary CSS -->
     <style type="text/css">
         #canvas {
