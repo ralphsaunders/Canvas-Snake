@@ -30,7 +30,7 @@ $( document ).ready( function() {
          *
          * The unit of measure that determines move distance and sizing.
          */
-        var unit = 20;
+        var unit = 30;
 
         /**
          * coordinates
@@ -47,13 +47,6 @@ $( document ).ready( function() {
          * for positioning.
          */
         var pastCoords = new Array();
-
-        /**
-         * Move distance
-         *
-         * The amount of pixels the snake should move.
-         */
-        var unit = 30;
 
         /**
          * Score
@@ -296,17 +289,37 @@ $( document ).ready( function() {
                 nyanCounter = 0;
             }
 
-            draw.drawImage( nyan[nyanCounter], origin[0], origin[1], 30, 19 );
+            draw.drawImage( nyan[nyanCounter], origin[0], origin[1]  );
             nyanCounter++;
 
             // body segments
             for( i = 0; i < segments.length; i++ ) {
-                if( i < 5 ) {
-                    draw.fillStyle = "rgba( 20, 151, 245, 0." + ( i + 3 ) + " )";
+
+                if( i % 2 ) {
+                   var offset = 3;
                 } else {
-                    draw.fillStyle = "rgba( 20, 151, 245, 0.7 )";
+                   var offset = 0;
                 }
-                draw.fillRect( pastCoords[i][0], pastCoords[i][1], unit, unit );
+
+                var height = 5;
+                draw.fillStyle = "rgba( 253, 0, 0, 1 )";
+                draw.fillRect( pastCoords[i][0], pastCoords[i][1] + offset , unit, height );
+
+                draw.fillStyle = "rgba( 253, 152, 0, 1 )";
+                draw.fillRect( pastCoords[i][0], pastCoords[i][1] + offset + height, unit, height );
+
+                draw.fillStyle = "rgba( 253, 252, 0, 1 )";
+                draw.fillRect( pastCoords[i][0], pastCoords[i][1] + offset + height * 2 , unit, height );
+
+                draw.fillStyle = "rgba( 51, 254, 0, 1 )";
+                draw.fillRect( pastCoords[i][0], pastCoords[i][1] + offset + height * 3 , unit, height );
+
+                draw.fillStyle = "rgba( 0, 156, 253, 1 )";
+                draw.fillRect( pastCoords[i][0], pastCoords[i][1] + offset + height * 4 , unit, height );
+
+                draw.fillStyle = "rgba( 102, 51, 253, 1 )";
+                draw.fillRect( pastCoords[i][0], pastCoords[i][1] + offset + height * 5 , unit, height );
+
             }
         }
 
@@ -360,7 +373,7 @@ $( document ).ready( function() {
 
                 fruitExists = false;
                 segments.push( toString( segments.length + 1 ) );
-                if( tickSpeed > 40 ) {
+                if( tickSpeed > 60 ) {
                     tickSpeed -= 10;
                 }
             }
