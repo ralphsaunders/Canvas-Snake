@@ -8,6 +8,7 @@
     <script type="text/javascript" src="<?php echo base_url(); ?>resources/js/scripts.js?<?php echo time(); ?>"></script>
     <script type="text/javascript">
         var siteUrl = "<?php echo site_url(); ?>/";
+        var baseUrl = "<?php echo base_url(); ?>/";
     </script>
 
     <!-- CSS -->

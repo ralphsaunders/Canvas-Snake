@@ -26,6 +26,13 @@ $( document ).ready( function() {
         var draw = canvas.getContext( '2d' );
 
         /**
+         * Unit of Measure
+         *
+         * The unit of measure that determines move distance and sizing.
+         */
+        var unit = 20;
+
+        /**
          * coordinates
          *
          * Array holds x + y coordinates for snake's head
@@ -46,7 +53,7 @@ $( document ).ready( function() {
          *
          * The amount of pixels the snake should move.
          */
-        var moveDistance = 20;
+        var unit = 30;
 
         /**
          * Score
@@ -101,7 +108,7 @@ $( document ).ready( function() {
          *
          * Int controls how fast the game "ticks". Default is 100.
          */
-        var tickSpeed = 100;
+        var tickSpeed = 150;
 
         /**
          * fruit exists
@@ -132,6 +139,35 @@ $( document ).ready( function() {
          * Int keeps track of player's current score
          */
         var playersScore = 0;
+
+        /**
+         * Nyan Cat
+         *
+         * Nya Nya Nya Nya
+         */
+        var nyan = new Array();
+        var nyan1 = new Image();
+        nyan1.src = baseUrl + 'resources/imgs/nyan-cat-1.png';
+        nyan.push( nyan1 );
+        var nyan2 = new Image();
+        nyan2.src = baseUrl + 'resources/imgs/nyan-cat-2.png';
+        nyan.push( nyan2 );
+        var nyan3 = new Image();
+        nyan3.src = baseUrl + 'resources/imgs/nyan-cat-3.png';
+        nyan.push( nyan3 );
+        var nyan4 = new Image();
+        nyan4.src = baseUrl + 'resources/imgs/nyan-cat-4.png';
+        nyan.push( nyan4 );
+        var nyan5 = new Image();
+        nyan5.src = baseUrl + 'resources/imgs/nyan-cat-5.png';
+        nyan.push( nyan5 );
+        var nyan6 = new Image();
+        nyan6.src = baseUrl + 'resources/imgs/nyan-cat-6.png';
+        nyan.push( nyan6 );
+
+        var nyanCounter = 0;
+
+
 
         /**
          * Add High Score
@@ -219,26 +255,26 @@ $( document ).ready( function() {
             updatePastCoords();
 
             if( direction == 'up' ) {
-                origin[1] -= moveDistance;
+                origin[1] -= unit;
             } else if( direction == 'left' ) {
-                origin[0] -= moveDistance;
+                origin[0] -= unit;
             } else if( direction == 'down' ) {
-                origin[1] += moveDistance;
+                origin[1] += unit;
             } else if( direction == 'right' ) {
-                origin[0] += moveDistance;
+                origin[0] += unit;
             }
 
             // Reset snakes head if it has gone out of bounds
             if( origin[0] < 0 ) {
-                origin[0] = canvas.width - moveDistance;
-            } else if( origin[0] + moveDistance > canvas.width ) {
-                origin[0] = 0; // No need to add moveDistance because head is drawn from topLeft
+                origin[0] = canvas.width - unit;
+            } else if( origin[0] + unit > canvas.width ) {
+                origin[0] = 0; // No need to add unit because head is drawn from topLeft
             }
 
             if( origin[1] < 0 ) {
-                origin[1] = canvas.height - moveDistance;
-            } else if( origin[1] + moveDistance > canvas.height ) {
-                origin[1] = 0; // No need to add moveDistance because head is drawn from topLeft
+                origin[1] = canvas.height - unit;
+            } else if( origin[1] + unit > canvas.height ) {
+                origin[1] = 0; // No need to add unit because head is drawn from topLeft
             }
         }
 
@@ -253,8 +289,15 @@ $( document ).ready( function() {
          */
         function paintSnake( origin ) {
             // head
-            draw.fillStyle = "rgb( 20, 151, 245)";
-            draw.fillRect( origin[0], origin[1], 20, 20 );
+            //draw.fillStyle = "rgb( 20, 151, 245)";
+            //draw.fillRect( origin[0], origin[1], 20, 20 );
+
+            if( nyanCounter >= 5 ) {
+                nyanCounter = 0;
+            }
+
+            draw.drawImage( nyan[nyanCounter], origin[0], origin[1], 30, 19 );
+            nyanCounter++;
 
             // body segments
             for( i = 0; i < segments.length; i++ ) {
@@ -263,7 +306,7 @@ $( document ).ready( function() {
                 } else {
                     draw.fillStyle = "rgba( 20, 151, 245, 0.7 )";
                 }
-                draw.fillRect( pastCoords[i][0], pastCoords[i][1], 20, 20 );
+                draw.fillRect( pastCoords[i][0], pastCoords[i][1], unit, unit );
             }
         }
 
@@ -295,10 +338,10 @@ $( document ).ready( function() {
             }
 
             draw.fillStyle = "green"; // It's an apple!
-            draw.fillRect( fruitCoords[0], fruitCoords[1], 20, 20 );
+            draw.fillRect( fruitCoords[0], fruitCoords[1], unit, unit );
 
-            var snakeHead = [ [ coords[0], coords[0] + 20 ], [ coords[1], coords[1] + 20 ] ];
-            var fruit = [ [ fruitCoords[0], fruitCoords[0] + 20 ], [ fruitCoords[1], fruitCoords[1] + 20 ] ];
+            var snakeHead = [ [ coords[0], coords[0] + nyan[0].width ], [ coords[1], coords[1] + nyan[0].height ] ];
+            var fruit = [ [ fruitCoords[0], fruitCoords[0] + unit ], [ fruitCoords[1], fruitCoords[1] + unit ] ];
 
             var hitX = hitCheck( snakeHead[0], fruit[0] );
             var hitY = hitCheck( snakeHead[1], fruit[1] );
@@ -306,14 +349,14 @@ $( document ).ready( function() {
             var hit = hitX && hitY;
 
             if( hit ) {
-                draw.clearRect( fruitCoords[0], fruitCoords[1], 20, 20 );
+                draw.clearRect( fruitCoords[0], fruitCoords[1], unit, unit );
 
                 // Update score
                 updateScore();
 
                 // Show hit
-                draw.fillStyle = "rgb( 20, 151, 245)";
-                draw.fillRect( fruitCoords[0], fruitCoords[1], 20, 20 );
+                //draw.fillStyle = "rgb( 20, 151, 245)";
+                //draw.fillRect( fruitCoords[0], fruitCoords[1], unit, unit );
 
                 fruitExists = false;
                 segments.push( toString( segments.length + 1 ) );
@@ -329,8 +372,8 @@ $( document ).ready( function() {
          * Generates random x + y coordinates in multiples of 20.
          */
         function generateRandomCoords() {
-            var x = Math.round( Math.floor( Math.random() * ( canvas.width - 19 ) ) / 20 ) * 20;
-            var y = Math.round( Math.floor( Math.random() * ( canvas.height - 19 ) ) / 20 ) * 20;
+            var x = Math.round( Math.floor( Math.random() * ( canvas.width - ( unit - 1 ) ) ) / unit ) * unit;
+            var y = Math.round( Math.floor( Math.random() * ( canvas.height - ( unit - 1 ) ) ) / unit ) * unit;
 
             return [ x, y ];
         }
@@ -341,9 +384,9 @@ $( document ).ready( function() {
          * Checks to see whether snake has bitten itself.
          */
         function tailBiteCheck() {
-            var snakeHead = [ [ coords[0], coords[0] + 20 ], [ coords[1], coords[1] + 20 ] ];
+            var snakeHead = [ [ coords[0], coords[0] + nyan[0].width ], [ coords[1], coords[1] + nyan[0].height ] ];
             for( i = 0; i < segments.length - 1; i++ ) {
-                var tailSegment = [ [ pastCoords[i][0], pastCoords[i][0] + 20 ], [ pastCoords[i][1], pastCoords[i][1] + 20 ] ];
+                var tailSegment = [ [ pastCoords[i][0], pastCoords[i][0] + unit ], [ pastCoords[i][1], pastCoords[i][1] + unit ] ];
 
                 var hitX = hitCheck( snakeHead[0], tailSegment[0] );
                 var hitY = hitCheck( snakeHead[1], tailSegment[1] );
